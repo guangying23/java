@@ -1,6 +1,6 @@
 Swing 提供了丰富的 GUI 组件，用于构建图形用户界面。以下是一些常见的 Swing 组件：
 
-1. **JButton:**
+1. JButton:
    - 按钮，用于触发动作或事件。
   
 ```
@@ -21,7 +21,7 @@ public class Jbutton01 {
 }
 ```
 
-2. **JTextField:**
+2. JTextField:
    - 文本框，用于接收用户输入的文本。
 
 3. **JLabel:**
