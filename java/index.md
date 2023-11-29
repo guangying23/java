@@ -1,6 +1,7 @@
 ## 第 10 章面向对象编程(高级部分)
-### 10.1 在Java中，类变量（class variables）是指属于类而不是类的实例的变量。它们也被称为静态变量（static variables），因为它们使用关键字static来声明。类变量与特定类的每个
-实例都共享相同的值。
+### 10.1 类变量
+在Java中，类变量（class variables）是指属于类而不是类的实例的变量。它们也被称为静态变量（static variables），因为它们使用关键字static来声明。类变量与特定类的每个实例都共享相同的值。
+
 ```
 public class MyClass {
     // 类变量，使用关键字 static 声明
