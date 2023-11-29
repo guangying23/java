@@ -388,3 +388,171 @@ public class MyClass {
 
 抽象类用于建模一些通用的行为和属性，并为子类提供一种共享的基础结构。通过继承抽象类，子类可以获得抽象类中定义的方法和属性，并且必须提供对抽象方法的具体实现。
 这种机制有助于在大型项目中建立一致的代码结构，同时提供了一种方法来强制子类提供特定的行为。
+
+4. **静态方法：** 从 Java 8 开始，抽象类可以包含静态方法。在 Java 8 之前，抽象类只能包含实例方法和字段，而不能包含静态方法。静态方法是一种属于类而不是实例的方法，因此即使在抽象类中，也可以使用静态方法。
+
+### 10.10 接口
+在Java中，接口（Interface）是一种抽象类型，用于定义类应该遵循的行为。接口定义了一组抽象方法，而没有提供这些方法的具体实现。类通过实现（`implements`）接口来表明它们提供了接口中定义的行为。接口也可以包含常量和默认方法。
+
+以下是接口的主要特点和用法：
+
+1. **抽象方法：** 接口中的方法是抽象的，只包含方法的签名而没有具体实现。实现接口的类必须提供对这些方法的具体实现。
+
+    ```java
+    // 定义一个简单的接口
+    interface Shape {
+        void draw(); // 抽象方法
+    }
+
+    // 实现接口的类
+    class Circle implements Shape {
+        @Override
+        public void draw() {
+            System.out.println("Drawing a circle");
+        }
+    }
+    ```
+
+2. **常量：** 接口可以包含常量，这些常量是隐式地声明为 `public`、`static`、`final` 的。在实现类中，可以直接使用接口中的常量。
+
+    ```java
+    interface Constants {
+        int MAX_VALUE = 100; // 常量
+
+        void printMaxValue(); // 抽象方法
+    }
+
+    class MyClass implements Constants {
+        @Override
+        public void printMaxValue() {
+            System.out.println("Max value: " + MAX_VALUE);
+        }
+    }
+    ```
+
+3. **默认方法（Default Methods）：** 从Java 8开始，接口支持默认方法，它允许在接口中提供方法的默认实现。实现类可以选择覆盖默认方法，也可以直接使用默认实现。
+
+    ```java
+    interface Greet {
+        default void sayHello() {
+            System.out.println("Hello, World!");
+        }
+    }
+
+    class GreetImpl implements Greet {
+        // 不覆盖默认方法，直接使用默认实现
+    }
+    ```
+
+4. **静态方法（Static Methods）：** 从Java 8开始，接口也可以包含静态方法。这些方法可以通过接口名直接调用，不需要通过实现类的实例调用。
+
+    ```java
+    interface MathOperations {
+        static int add(int a, int b) {
+            return a + b;
+        }
+    }
+
+    class Calculator implements MathOperations {
+        // 可以直接调用接口中的静态方法
+        int sum = MathOperations.add(5, 3);
+    }
+    ```
+
+接口的使用有助于实现多继承，因为一个类可以实现多个接口。它还促使了代码的灵活性和可维护性，使得不同的类可以共享相同的行为约定。接口的设计也有助于解耦系统中的不同模块，提高了代码的可扩展性。
+
+### 10.11 内部类
+在Java中，内部类是定义在另一个类内部的类。内部类可以访问包含它的外部类的成员，包括私有成员。内部类提供了一种有效的封装和组织代码的方式，并可以用于实现一些设计模式和特殊需求。
+
+有以下几种类型的内部类：
+
+1. **成员内部类（Member Inner Class）：** 成员内部类是定义在类的内部，并且不是 `static` 的内部类。它可以访问外部类的成员，包括私有成员。
+
+    ```java
+    public class OuterClass {
+        private int outerField;
+
+        public class InnerClass {
+            public void display() {
+                System.out.println("OuterField: " + outerField);
+            }
+        }
+    }
+
+    public class Main {
+        public static void main(String[] args) {
+            OuterClass outerObj = new OuterClass();
+            OuterClass.InnerClass innerObj = outerObj.new InnerClass();
+            innerObj.display();
+        }
+    }
+    ```
+
+2. **静态成员内部类（Static Nested Class）：** 静态成员内部类是定义在类的内部，并且使用 `static` 修饰的内部类。它不能直接访问外部类的非静态成员，但可以访问外部类的静态成员。
+
+    ```java
+    public class OuterClass {
+        private static int outerStaticField;
+
+        public static class StaticInnerClass {
+            public void display() {
+                System.out.println("OuterStaticField: " + outerStaticField);
+            }
+        }
+    }
+
+    public class Main {
+        public static void main(String[] args) {
+            OuterClass.StaticInnerClass innerObj = new OuterClass.StaticInnerClass();
+            innerObj.display();
+        }
+    }
+    ```
+
+3. **局部内部类（Local Inner Class）：** 局部内部类是定义在方法或作用域内的内部类。它只在定义它的方法或作用域内可见。
+
+    ```java
+    public class OuterClass {
+        public void outerMethod() {
+            class LocalInnerClass {
+                public void display() {
+                    System.out.println("Inside local inner class");
+                }
+            }
+
+            LocalInnerClass innerObj = new LocalInnerClass();
+            innerObj.display();
+        }
+    }
+
+    public class Main {
+        public static void main(String[] args) {
+            OuterClass outerObj = new OuterClass();
+            outerObj.outerMethod();
+        }
+    }
+    ```
+
+4. **匿名内部类（Anonymous Inner Class）：** 匿名内部类是没有名字的局部内部类，通常用于创建一个只需要一次使用的类的实例。
+
+    ```java
+    interface Greeting {
+        void greet();
+    }
+
+    public class Main {
+        public static void main(String[] args) {
+            Greeting greeting = new Greeting() {
+                @Override
+                public void greet() {
+                    System.out.println("Hello, from anonymous inner class");
+                }
+            };
+
+            greeting.greet();
+        }
+    }
+    ```
+
+内部类的使用有助于实现封装和组织代码，同时可以访问外部类的成员。选择何种类型的内部类取决于具体的需求和设计考虑。
+
