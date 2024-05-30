@@ -638,4 +638,649 @@ public SocketAddress getLocalSocketAddress() {
 
 与此套接字关联的套接字通道，如果此套接字不是为通道创建的，则返回 null。
 
-## 2.21 `
+## 2.21 `public InputStream getInputStream()`
+返回此套接字的输入流。
+
+如果此套接字具有关联的通道，则生成的输入流将所有操作委托给该通道。如果通道处于非阻塞模式，则输入流的读取操作将抛出 `java.nio.channels.IllegalBlockingModeException`。
+
+在异常情况下，远程主机或网络软件可能会中断底层连接（例如在 TCP 连接情况下的连接重置）。当网络软件检测到连接中断时，返回的输入流将应用以下规则：
+- 网络软件可能会丢弃由套接字缓冲的字节。未被网络软件丢弃的字节可以使用 `read` 读取。
+- 如果套接字上没有缓冲的字节，或者所有缓冲的字节已被 `read` 消费，则所有后续对 `read` 的调用将抛出 `IOException`。
+- 如果套接字上没有缓冲的字节，并且套接字未通过 `close` 关闭，则 `available` 将返回 0。
+- 关闭返回的 InputStream 将关闭关联的套接字。
+
+返回：
+- 用于从此套接字读取字节的输入流。
+
+抛出：
+- `IOException`：如果在创建输入流时发生 I/O 错误，套接字已关闭，套接字未连接，或套接字输入已使用 `shutdownInput()` 关闭。
+
+```
+public InputStream getInputStream() throws IOException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        if (!isConnected())
+            throw new SocketException("Socket is not connected");
+        if (isInputShutdown())
+            throw new SocketException("Socket input is shutdown");
+        final Socket s = this;
+        InputStream is = null;
+        try {
+            is = AccessController.doPrivileged(
+                new PrivilegedExceptionAction<InputStream>() {
+                    public InputStream run() throws IOException {
+                        return impl.getInputStream();
+                    }
+                });
+        } catch (java.security.PrivilegedActionException e) {
+            throw (IOException) e.getException();
+        }
+        return is;
+    }
+```
+
+## 2.21 `public OutputStream getOutputStream()`
+返回此套接字的输出流。
+
+如果此套接字具有关联的通道，则生成的输出流将所有操作委托给该通道。如果通道处于非阻塞模式，则输出流的写操作将抛出 `java.nio.channels.IllegalBlockingModeException`。
+
+关闭返回的 OutputStream 将关闭关联的套接字。
+
+返回：
+- 用于向此套接字写入字节的输出流。
+
+抛出：
+- `IOException`：如果在创建输出流时发生 I/O 错误或套接字未连接。
+```
+public OutputStream getOutputStream() throws IOException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        if (!isConnected())
+            throw new SocketException("Socket is not connected");
+        if (isOutputShutdown())
+            throw new SocketException("Socket output is shutdown");
+        final Socket s = this;
+        OutputStream os = null;
+        try {
+            os = AccessController.doPrivileged(
+                new PrivilegedExceptionAction<OutputStream>() {
+                    public OutputStream run() throws IOException {
+                        return impl.getOutputStream();
+                    }
+                });
+        } catch (java.security.PrivilegedActionException e) {
+            throw (IOException) e.getException();
+        }
+        return os;
+    }
+```
+
+## 2.22 `public void setTcpNoDelay(boolean on)`
+启用/禁用 TCP_NODELAY（禁用/启用 Nagle 算法）。
+
+参数：
+
+on：true 表示启用 TCP_NODELAY，false 表示禁用。  
+抛出：
+
+SocketException：如果底层协议（例如 TCP 错误）存在错误。
+
+```
+   public void setTcpNoDelay(boolean on) throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        getImpl().setOption(SocketOptions.TCP_NODELAY, Boolean.valueOf(on));
+    }
+```
+
+## 2.23 `public boolean getTcpNoDelay()`
+测试是否启用了 TCP_NODELAY。
+
+返回：
+- 一个布尔值，指示是否启用了 TCP_NODELAY。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+
+```
+public boolean getTcpNoDelay() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        return ((Boolean) getImpl().getOption(SocketOptions.TCP_NODELAY)).booleanValue();
+    }
+```
+
+## 2.24 `public void setSoLinger(boolean on, int linger)`
+启用/禁用 SO_LINGER 并指定延迟时间（以秒为单位）。最大超时值取决于平台。该设置仅影响套接字关闭。
+
+参数：
+- `on`：是否启用延迟。
+- `linger`：如果 `on` 为 true，延迟多长时间。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+- `IllegalArgumentException`：如果延迟值为负数。
+
+```
+public void setSoLinger(boolean on, int linger) throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        if (!on) {
+            getImpl().setOption(SocketOptions.SO_LINGER, new Boolean(on));
+        } else {
+            if (linger < 0) {
+                throw new IllegalArgumentException("invalid value for SO_LINGER");
+            }
+            if (linger > 65535)
+                linger = 65535;
+            getImpl().setOption(SocketOptions.SO_LINGER, new Integer(linger));
+        }
+    }
+```
+
+## 2.25 `public int getSoLinger()`
+返回 SO_LINGER 的设置。-1 表示该选项已禁用。该设置仅影响套接字关闭。
+
+返回：
+- SO_LINGER 的设置值。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+
+```
+public int getSoLinger() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        Object o = getImpl().getOption(SocketOptions.SO_LINGER);
+        if (o instanceof Integer) {
+            return ((Integer) o).intValue();
+        } else {
+            return -1;
+        }
+    }
+```
+
+## 2.26 `public void sendUrgentData (int data)`
+在套接字上发送一个字节的紧急数据。要发送的字节是 `data` 参数的最低八位。紧急字节将在任何先前写入套接字 OutputStream 的数据之后以及任何将来写入 OutputStream 的数据之前发送。
+
+参数：
+- `data`：要发送的数据字节
+
+抛出：
+- `IOException`：如果在发送数据时发生错误。
+
+```
+public void sendUrgentData (int data) throws IOException  {
+        if (!getImpl().supportsUrgentData ()) {
+            throw new SocketException ("Urgent data not supported");
+        }
+        getImpl().sendUrgentData (data);
+    }
+```
+
+## 2.27 `public void setOOBInline(boolean on) `
+启用/禁用 SO_OOBINLINE（接收 TCP 紧急数据）。默认情况下，此选项被禁用，并且在套接字上接收到的 TCP 紧急数据会被静默丢弃。如果用户希望接收紧急数据，则必须启用此选项。启用后，紧急数据将与正常数据内联接收。
+
+请注意，对于处理传入的紧急数据，仅提供有限的支持。特别是，没有传入紧急数据的通知，除非由更高层次的协议提供，否则无法区分正常数据和紧急数据。
+
+参数：
+- `on`：true 表示启用 SO_OOBINLINE，false 表示禁用。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+```
+public void setOOBInline(boolean on) throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        getImpl().setOption(SocketOptions.SO_OOBINLINE, Boolean.valueOf(on));
+    }
+```
+
+## 2.28  `public boolean getOOBInline()`
+测试是否启用了 SO_OOBINLINE。
+
+返回：
+- 一个布尔值，指示是否启用了 SO_OOBINLINE。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+
+```
+public boolean getOOBInline() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        return ((Boolean) getImpl().getOption(SocketOptions.SO_OOBINLINE)).booleanValue();
+    }
+```
+
+## 2.29 `public synchronized void setSoTimeout(int timeout)`
+启用/禁用指定超时时间（以毫秒为单位）的 SO_TIMEOUT。将此选项设置为非零超时时间后，与此 Socket 关联的 InputStream 上的 read() 调用将仅阻塞这段时间。如果超时时间到期，将会引发 `java.net.SocketTimeoutException`，但套接字仍然有效。必须在进入阻塞操作之前启用该选项才能生效。超时时间必须大于 0。超时时间为零被解释为无限超时。
+
+参数：
+- `timeout`：指定的超时时间，以毫秒为单位。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+
+```
+public synchronized void setSoTimeout(int timeout) throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        if (timeout < 0)
+          throw new IllegalArgumentException("timeout can't be negative");
+
+        getImpl().setOption(SocketOptions.SO_TIMEOUT, new Integer(timeout));
+    }
+```
+
+## 2.29 `public synchronized int getSoTimeout()`
+返回 SO_TIMEOUT 的设置。返回值为 0 表示该选项已禁用（即无限超时）。
+
+返回：
+- SO_TIMEOUT 的设置值。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+
+```
+public synchronized int getSoTimeout() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        Object o = getImpl().getOption(SocketOptions.SO_TIMEOUT);
+        /* extra type safety */
+        if (o instanceof Integer) {
+            return ((Integer) o).intValue();
+        } else {
+            return 0;
+        }
+    }
+```
+
+## 2.30 `public synchronized void setSendBufferSize(int size)`
+将此套接字的 SO_SNDBUF 选项设置为指定的值。SO_SNDBUF 选项被平台的网络代码用作对底层网络 I/O 缓冲区大小的提示。
+
+因为 SO_SNDBUF 是一个提示，所以想要验证缓冲区设置为多大的应用程序应调用 getSendBufferSize()。
+
+参数：
+- `size`：要设置的发送缓冲区大小。该值必须大于 0。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+- `IllegalArgumentException`：如果值为 0 或为负数。
+
+```
+public synchronized void setSendBufferSize(int size)
+    throws SocketException{
+        if (!(size > 0)) {
+            throw new IllegalArgumentException("negative send size");
+        }
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        getImpl().setOption(SocketOptions.SO_SNDBUF, new Integer(size));
+    }
+```
+
+## 2.31 `public synchronized int getSendBufferSize()`
+获取此套接字的 SO_SNDBUF 选项值，即平台在此套接字上用于输出的缓冲区大小。
+
+返回：
+- 此套接字的 SO_SNDBUF 选项值。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+```
+public synchronized int getSendBufferSize() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        int result = 0;
+        Object o = getImpl().getOption(SocketOptions.SO_SNDBUF);
+        if (o instanceof Integer) {
+            result = ((Integer)o).intValue();
+        }
+        return result;
+    }
+```
+
+## 2.32  `public synchronized void setReceiveBufferSize(int size)`
+将此套接字的 SO_RCVBUF 选项设置为指定的值。SO_RCVBUF 选项被平台的网络代码用作对底层网络 I/O 缓冲区大小的提示。
+
+增加接收缓冲区大小可以提高高流量连接的网络 I/O 性能，而减小它可以帮助减少传入数据的积压。
+
+因为 SO_RCVBUF 是一个提示，所以想要验证缓冲区设置为多大的应用程序应调用 getReceiveBufferSize()。
+
+SO_RCVBUF 的值也用于设置发送给远程对等方的 TCP 接收窗口。通常，窗口大小可以在套接字连接时随时修改。但是，如果需要一个大于 64K 的接收窗口，则必须在套接字连接到远程对等方之前进行请求。有两种情况需要注意：
+- 对于从 ServerSocket 接受的套接字，必须在将 ServerSocket 绑定到本地地址之前通过调用 ServerSocket.setReceiveBufferSize(int) 来执行此操作。
+- 对于客户端套接字，在将套接字连接到其远程对等方之前，必须调用 setReceiveBufferSize()。
+
+参数：
+- `size`：要设置的接收缓冲区大小。该值必须大于 0。
+
+抛出：
+- `IllegalArgumentException`：如果值为 0 或为负数。
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+```
+public synchronized void setReceiveBufferSize(int size)
+    throws SocketException{
+        if (size <= 0) {
+            throw new IllegalArgumentException("invalid receive size");
+        }
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        getImpl().setOption(SocketOptions.SO_RCVBUF, new Integer(size));
+    }
+```
+
+## 2.33 `public synchronized int getReceiveBufferSize()`
+获取此套接字的 SO_RCVBUF 选项值，即平台在此套接字上用于输入的缓冲区大小。
+
+返回：
+- 此套接字的 SO_RCVBUF 选项值。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+```
+public synchronized int getReceiveBufferSize()
+    throws SocketException{
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        int result = 0;
+        Object o = getImpl().getOption(SocketOptions.SO_RCVBUF);
+        if (o instanceof Integer) {
+            result = ((Integer)o).intValue();
+        }
+        return result;
+    }
+```
+
+## 2.34 `public void setKeepAlive(boolean on)`
+启用/禁用 SO_KEEPALIVE。
+
+参数：
+- `on`：是否打开套接字的保持活动功能。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+```
+public void setKeepAlive(boolean on) throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        getImpl().setOption(SocketOptions.SO_KEEPALIVE, Boolean.valueOf(on));
+    }
+```
+
+## 2.35 `public boolean getKeepAlive()`
+测试是否启用了 SO_KEEPALIVE。
+
+返回：
+- 一个布尔值，指示是否启用了 SO_KEEPALIVE。
+
+抛出：
+- `SocketException`：如果底层协议（例如 TCP 错误）存在错误。
+```
+public boolean getKeepAlive() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        return ((Boolean) getImpl().getOption(SocketOptions.SO_KEEPALIVE)).booleanValue();
+    }
+```
+
+## 2.36 `public void setTrafficClass(int tc)`
+设置从此 Socket 发送的数据包的 IP 头中的流量类别或服务类型字节。由于底层网络实现可能会忽略此值，应用程序应将其视为提示。
+
+`tc` 必须在范围 0 <= tc <= 255 内，否则将抛出 `IllegalArgumentException`。
+
+备注：
+- 对于 IPv4，该值是一个整数，其最低有效的 8 位表示套接字发送的 IP 数据包中 TOS 字节的值。RFC 1349 定义了 TOS 值如下：
+  - IPTOS_LOWCOST (0x02)
+  - IPTOS_RELIABILITY (0x04)
+  - IPTOS_THROUGHPUT (0x08)
+  - IPTOS_LOWDELAY (0x10)
+  最后一个低位总是被忽略，因为这对应于 MBZ（必须为零）位。设置优先级字段中的位可能会导致 `SocketException`，指示不允许该操作。
+- 如 RFC 1122 第 4.2.4.2 节所示，符合要求的 TCP 实现应该允许应用程序在连接的生命周期内更改 TOS 字段，但不是必须的。因此，在 TCP 连接建立后是否可以更改服务类型字段取决于底层平台中的实现。应用程序不应假设它们可以在连接后更改 TOS 字段。
+- 对于 IPv6，`tc` 是要放入 IP 头的 sin6_flowinfo 字段的值。
+
+参数：
+- `tc`：位集的整数值。
+
+抛出：
+- `SocketException`：设置流量类别或服务类型时出现错误。
+```
+public void setTrafficClass(int tc) throws SocketException {
+        if (tc < 0 || tc > 255)
+            throw new IllegalArgumentException("tc is not in range 0 -- 255");
+
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        try {
+            getImpl().setOption(SocketOptions.IP_TOS, tc);
+        } catch (SocketException se) {
+            // not supported if socket already connected
+            // Solaris returns error in such cases
+            if(!isConnected())
+                throw se;
+        }
+    }
+```
+
+## 2.37 `public int getTrafficClass()`
+获取从此 Socket 发送的数据包的 IP 头中的流量类别或服务类型。
+
+由于底层网络实现可能会忽略使用 setTrafficClass(int) 设置的流量类别或服务类型，因此此方法可能返回与之前使用 setTrafficClass(int) 方法在此 Socket 上设置的值不同的值。
+
+返回：
+- 已设置的流量类别或服务类型。
+
+抛出：
+- `SocketException`：获取流量类别或服务类型值时出现错误。
+```
+public int getTrafficClass() throws SocketException {
+        return ((Integer) (getImpl().getOption(SocketOptions.IP_TOS))).intValue();
+    }
+```
+
+## 2.38 `public void setReuseAddress(boolean on)`
+启用/禁用 SO_REUSEADDR 套接字选项。
+
+当 TCP 连接关闭时，该连接可能在关闭后的一段时间内保持在超时状态（通常称为 TIME_WAIT 状态或 2MSL 等待状态）。对于使用已知套接字地址或端口的应用程序，如果涉及该套接字地址或端口的连接处于超时状态，可能无法将套接字绑定到所需的 SocketAddress。
+
+在使用 bind(SocketAddress) 绑定套接字之前启用 SO_REUSEADDR 允许套接字绑定，即使先前的连接处于超时状态。
+
+创建套接字时，SO_REUSEADDR 的初始设置为禁用状态。
+
+在套接字绑定（参见 isBound()）之后启用或禁用 SO_REUSEADDR 的行为未定义。
+
+参数：
+- `on` – 是否启用或禁用套接字选项。
+
+抛出：
+- `SocketException`：启用或禁用 SO_REUSEADDR 套接字选项时发生错误，或套接字已关闭。
+```
+public void setReuseAddress(boolean on) throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        getImpl().setOption(SocketOptions.SO_REUSEADDR, Boolean.valueOf(on));
+    }
+```
+
+## 2.39 `public boolean getReuseAddress()`
+测试 SO_REUSEADDR 是否启用。
+
+返回：
+- 一个 boolean 值，指示 SO_REUSEADDR 是否启用。
+
+抛出：
+- `SocketException`：如果底层协议中存在错误，例如 TCP 错误。
+```
+public boolean getReuseAddress() throws SocketException {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        return ((Boolean) (getImpl().getOption(SocketOptions.SO_REUSEADDR))).booleanValue();
+    }
+```
+
+## 2.40 `public synchronized void close()`
+关闭此套接字。
+
+任何当前在此套接字上的 I/O 操作中被阻塞的线程将抛出 `SocketException`。
+
+一旦套接字关闭，它将不可用于进一步的网络使用（即不能重新连接或重新绑定）。需要创建一个新套接字。
+
+关闭此套接字还将关闭套接字的 `InputStream` 和 `OutputStream`。
+
+如果此套接字有相关联的通道，则该通道也将关闭。
+
+抛出：
+- `IOException`：如果在关闭此套接字时发生 I/O 错误。
+```
+public synchronized void close() throws IOException {
+        synchronized(closeLock) {
+            if (isClosed())
+                return;
+            if (created)
+                impl.close();
+            closed = true;
+        }
+    }
+```
+
+## 2.41 `public void shutdownInput()`
+将此套接字的输入流置于“流的末尾”。发送到套接字输入流一侧的任何数据将被确认，然后被静默丢弃。
+
+如果在套接字上调用此方法后从套接字输入流读取，流的 `available` 方法将返回 0，其 `read` 方法将返回 -1（流的末尾）。
+
+抛出：
+- `IOException`：如果在关闭此套接字时发生 I/O 错误。
+```
+public void shutdownInput() throws IOException
+    {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        if (!isConnected())
+            throw new SocketException("Socket is not connected");
+        if (isInputShutdown())
+            throw new SocketException("Socket input is already shutdown");
+        getImpl().shutdownInput();
+        shutIn = true;
+    }
+```
+
+## 2.42 `public void shutdownOutput()`
+禁用此套接字的输出流。对于 TCP 套接字，任何先前写入的数据都将被发送，然后按照 TCP 的正常连接终止序列进行处理。如果在调用 `shutdownOutput()` 后向套接字输出流写入数据，流将抛出 `IOException`。
+
+抛出：
+- `IOException`：如果在关闭此套接字时发生 I/O 错误。
+```
+public void shutdownOutput() throws IOException
+    {
+        if (isClosed())
+            throw new SocketException("Socket is closed");
+        if (!isConnected())
+            throw new SocketException("Socket is not connected");
+        if (isOutputShutdown())
+            throw new SocketException("Socket output is already shutdown");
+        getImpl().shutdownOutput();
+        shutOut = true;
+    }
+```
+
+## 2.43 `public String toString()`
+```
+public String toString() {
+        try {
+            if (isConnected())
+                return "Socket[addr=" + getImpl().getInetAddress() +
+                    ",port=" + getImpl().getPort() +
+                    ",localport=" + getImpl().getLocalPort() + "]";
+        } catch (SocketException e) {
+        }
+        return "Socket[unconnected]";
+    }
+```
+
+## 2.44 `public boolean isConnected()`
+```
+public boolean isConnected() {
+        // Before 1.3 Sockets were always connected during creation
+        return connected || oldImpl;
+    }
+```
+
+## 2.45 `public boolean isBound()`
+```
+public boolean isBound() {
+        // Before 1.3 Sockets were always bound during creation
+        return bound || oldImpl;
+    }
+```
+
+## 2.46 `public boolean isClosed()`
+```
+public boolean isClosed() {
+        synchronized(closeLock) {
+            return closed;
+        }
+    }
+```
+
+## 2.47 `public boolean isInputShutdown()`
+```
+public boolean isInputShutdown() {
+        return shutIn;
+    }
+```
+
+## 2.48 `public boolean isOutputShutdown() `
+```
+public boolean isOutputShutdown() {
+        return shutOut;
+    }
+```
+
+## 2.49 `private static SocketImplFactory factory = null;`
+
+## 2.50 `public static synchronized void setSocketImplFactory(SocketImplFactory fac) `
+设置应用程序的客户端套接字实现工厂。工厂只能被指定一次。  
+当应用程序创建一个新的客户端套接字时，会调用套接字实现工厂的 `createSocketImpl` 方法来创建实际的套接字实现。  
+将 `null` 传递给该方法是无操作，除非工厂已经设置。  
+如果存在安全管理器，该方法首先调用安全管理器的 `checkSetFactory` 方法以确保允许操作。这可能会导致抛出 `SecurityException`。  
+
+参数：
+- `fac` – 所需的工厂。
+
+抛出：
+- `IOException`：如果在设置套接字工厂时发生 I/O 错误。
+- `SocketException`：如果工厂已经定义。
+- `SecurityException`：如果存在安全管理器并且其 `checkSetFactory` 方法不允许该操作。
+```
+public static synchronized void setSocketImplFactory(SocketImplFactory fac)
+        throws IOException
+    {
+        if (factory != null) {
+            throw new SocketException("factory already defined");
+        }
+        SecurityManager security = System.getSecurityManager();
+        if (security != null) {
+            security.checkSetFactory();
+        }
+        factory = fac;
+    }
+```
+
+## 2.51 `public void setPerformancePreferences(int connectionTime, int latency,int bandwidth)`
+设置此套接字的性能偏好。  
+套接字默认使用 TCP/IP 协议。一些实现可能提供不同于 TCP/IP 的替代协议，这些协议具有不同的性能特征。此方法允许应用程序表达其偏好，以便在实现从可用协议中选择时进行权衡。  
+性能偏好由三个整数描述，这些整数值表示短连接时间、低延迟和高带宽的相对重要性。整数的绝对值无关紧要；为了选择协议，只需比较这些值，较大的值表示更强的偏好。负值表示比正值优先级更低。如果应用程序更偏好短连接时间而不是低延迟和高带宽，例如，可以使用值（1，0，0）调用此方法。如果应用程序更偏好高带宽高于低延迟，低延迟高于短连接时间，则可以使用值（0，1，2）调用此方法。  
+在此套接字连接之后调用此方法将无效。
+
+参数：
+- `connectionTime` – 一个整数，表示短连接时间的重要性
+- `latency` – 一个整数，表示低延迟的重要性
+- `bandwidth` – 一个整数，表示高带宽的重要性
+```
+public void setPerformancePreferences(int connectionTime,
+                                          int latency,
+                                          int bandwidth)
+    {
+        /* Not implemented yet */
+    }
+```
