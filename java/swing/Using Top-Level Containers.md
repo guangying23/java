@@ -1,0 +1,125 @@
+讨论如何使用 JFrame、JDialog 和 JApplet 类共享的功能——内容窗格、菜单栏和根窗格。还讨论了包含层次结构，即顶级容器包含的组件树。
+# 一、正如我们之前提到的，Swing 提供了三个通用的顶级容器类：JFrame、JDialog 和 JApplet。在使用这些类时，应牢记以下几点：
+
+- 每个 GUI 组件要出现在屏幕上，必须是包含层次结构的一部分。包含层次结构是一个以顶级容器为根的组件树。我们稍后会展示一个例子。
+- 每个 GUI 组件只能包含一次。如果一个组件已经在一个容器中，并且你试图将其添加到另一个容器中，该组件将从第一个容器中移除，然后添加到第二个容器中。
+- 每个顶级容器都有一个内容窗格，通常包含（直接或间接）该顶级容器 GUI 中的可见组件。
+- 你可以选择性地向顶级容器添加一个菜单栏。菜单栏通常位于顶级容器内，但在内容窗格之外。某些外观和感觉（例如 Mac OS 外观和感觉）允许你将菜单栏放在更适合该外观和感觉的其他位置，例如屏幕顶部。
+
+注意：虽然 JInternalFrame 模仿 JFrame，但内部框架实际上不是顶级容器。
+
+这是一个由应用程序创建的框架图片。框架包含一个绿色的菜单栏（没有菜单），在框架的内容窗格中有一个大的空白黄色标签。
+![image](https://github.com/guangying23/java/assets/54796147/49b54cb1-9adf-4ef4-973f-3626f67c1a77)![image](https://github.com/guangying23/java/assets/54796147/8c331c46-0524-4259-966b-8b5c1d19e734)
+```java
+package components;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class TopLevelDemo {
+    /**
+     * 创建 GUI 并显示它。为了线程安全，
+     * 这个方法应该在事件调度线程中调用。
+     */
+    private static void createAndShowGUI() {
+        //创建并设置窗口。
+        JFrame frame = new JFrame("TopLevelDemo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //创建菜单栏，并将其背景设置为绿色。
+        JMenuBar greenMenuBar = new JMenuBar();
+        greenMenuBar.setOpaque(true);
+        greenMenuBar.setBackground(new Color(154, 165, 127));
+        greenMenuBar.setPreferredSize(new Dimension(200, 20));
+
+        // 创建一个黄色的标签放置在内容窗格中。
+        JLabel yellowLabel = new JLabel();
+        yellowLabel.setOpaque(true);
+        yellowLabel.setBackground(new Color(248, 213, 131));
+        yellowLabel.setPreferredSize(new Dimension(200, 180));
+
+        //设置菜单栏并将标签添加到内容窗格中。
+        frame.setJMenuBar(greenMenuBar);
+        frame.getContentPane().add(yellowLabel, BorderLayout.CENTER);
+
+        //展示窗口。
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        // 为事件分发线程安排一个任务：
+        // 创建并显示此应用程序的 GUI。
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+}
+```
+以下是该示例的 GUI 的包含层次结构：
+![image](https://github.com/guangying23/java/assets/54796147/d8395ab8-3640-4968-a88f-8d09633197ba)
+
+# 二、顶级容器和包含层次结构
+每个使用 Swing 组件的程序至少有一个顶级容器。这个顶级容器是包含层次结构的根——包含层次结构包含了所有出现在顶级容器内部的 Swing 组件。
+
+通常，具有 Swing 图形用户界面的独立应用程序至少有一个以 JFrame 作为根的包含层次结构。例如，如果一个应用程序有一个主窗口和两个对话框，那么该应用程序有三个包含层次结构，因此有三个顶级容器。一个包含层次结构的根是 JFrame，其他两个则以 JDialog 对象为根。
+
+基于 Swing 的小程序至少有一个包含层次结构，其中一个以 JApplet 对象为根。例如，一个弹出对话框的小程序有两个包含层次结构。浏览器窗口中的组件位于一个以 JApplet 对象为根的包含层次结构中。对话框有一个以 JDialog 对象为根的包含层次结构。
+
+# 三、将组件添加到内容面板
+下面是前面例子中用来获取框架内容面板并将黄色标签添加到其中的代码：
+
+```java
+frame.getContentPane().add(yellowLabel, BorderLayout.CENTER);
+```
+
+如代码所示，通过调用 `getContentPane` 方法可以找到顶层容器的内容面板。默认的内容面板是一个简单的中间容器，继承自 `JComponent`，并使用 `BorderLayout` 作为其布局管理器。
+
+自定义内容面板非常容易——例如，设置布局管理器或添加边框。然而，有一个小问题：`getContentPane` 方法返回的是一个 `Container` 对象，而不是 `JComponent` 对象。这意味着如果你想利用内容面板的 `JComponent` 特性，你需要将返回值进行类型转换，
+或者创建自己的组件作为内容面板。我们的示例通常采用第二种方法，因为它稍微更干净一些。我们有时还会采用另一种方法，即简单地向内容面板添加一个自定义组件，完全覆盖内容面板。
+
+请注意，`JPanel` 的默认布局管理器是 `FlowLayout`；你可能需要更改它。
+
+要使一个组件成为内容面板，使用顶层容器的 `setContentPane` 方法。例如：
+
+```java
+// 创建一个面板并添加组件到其中
+JPanel contentPane = new JPanel(new BorderLayout());
+contentPane.setBorder(someBorder);
+contentPane.add(someComponent, BorderLayout.CENTER);
+contentPane.add(anotherComponent, BorderLayout.PAGE_END);
+
+// 设置内容面板
+topLevelContainer.setContentPane(contentPane);
+```
+注意：  
+为了方便起见，`add` 方法及其变体 `remove` 和 `setLayout` 已被重写，以便在必要时转发到 `contentPane`。这意味着你可以编写：
+
+```java
+frame.add(child);
+```
+
+然后 `child` 会被添加到 `contentPane`。
+
+请注意，只有这三个方法会这样做。这意味着 `getLayout()` 不会返回用 `setLayout()` 设置的布局。(不会返回 contentPane 的布局管理器，而是返回 JFrame 自身的布局管理器)
+
+# 四、添加菜单栏
+理论上，所有顶级容器都可以容纳菜单栏。然而在实际应用中，菜单栏通常只出现在框架和小程序中。要向顶级容器添加菜单栏，首先创建一个 `JMenuBar` 对象，为其添加菜单，然后调用 `setJMenuBar` 方法。TopLevelDemo 使用以下代码向其框架添加菜单栏：
+
+```java
+frame.setJMenuBar(greenMenuBar);
+```
+
+有关实现菜单和菜单栏的更多信息，请参见“如何使用菜单”。
+
+# 五、根窗格
+每个顶级容器都依赖于一个叫做根窗格的隐藏中间容器。根窗格管理内容窗格和菜单栏，以及其他几个容器。通常使用 Swing 组件时不需要了解根窗格。然而，如果你需要拦截鼠标点击或在多个组件上绘制内容，就应该熟悉根窗格。
+
+以下是根窗格为框架（以及每个其他顶级容器）提供的组件列表：
+![image](https://github.com/guangying23/java/assets/54796147/258c15f0-4230-44f7-b7f5-02b80a0e50cf)
+我们已经告诉过你关于内容窗格和可选的菜单栏。根窗格添加的另外两个组件是分层窗格和玻璃窗格。分层窗格包含菜单栏和内容窗格，并且可以对其他组件进行 Z 轴排序。玻璃窗格通常用于拦截发生在顶级容器上的输入事件，并且还可以用于在多个组件上绘制内容。
+
+有关详细信息，请参阅《如何使用根窗格》。
