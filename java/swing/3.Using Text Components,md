@@ -6,5 +6,5 @@ Swing 文本组件显示文本，并可选择允许用户编辑文本。程序�
 Swing 提供了六种文本组件，以及支持的类和接口，满足了最复杂的文本需求。尽管它们用途和功能各不相同，但所有 Swing 文本组件都继承自相同的超类 JTextComponent，它为文本操作提供了高度可配置和强大的基础。
 
 下图显示了 JTextComponent 层次结构。
-![JTextComponent 层次结构](./images/JTextComponenthierarchy.png)
+![JTextComponent 层次结构](./images/JTextComponentHierarchy.png)
 
