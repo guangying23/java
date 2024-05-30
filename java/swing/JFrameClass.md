@@ -40,7 +40,7 @@ public class JFrame  extends Frame implements WindowConstants,
 
 # 二、方法
 ## 2.1 构造函数
-### 2.1.1 `public JFrame()`
+### 2.1.1 JFrame()
 构造一个最初不可见的新框架。  
 此构造函数将组件的 locale 属性设置为 JComponent.getDefaultLocale 返回的值。  
 抛出：  
@@ -52,7 +52,7 @@ public JFrame() throws HeadlessException {
     }
 ```
 
-### 2.1.2 `public JFrame(GraphicsConfiguration gc) `
+### 2.1.2 JFrame(GraphicsConfiguration gc) 
 在指定屏幕设备的 GraphicsConfiguration 中创建一个 Frame，并带有一个空白标题。  
 此构造函数将组件的 locale 属性设置为 JComponent.getDefaultLocale 返回的值。  
 参数：  
@@ -66,7 +66,7 @@ public JFrame(GraphicsConfiguration gc) {
     }
 ```
 
-### 2.1.3 `public JFrame(String title) throws HeadlessException`
+### 2.1.3 JFrame(String title)
 创建一个带有指定标题的新 Frame，初始时不可见。  
 此构造函数将组件的 locale 属性设置为 JComponent.getDefaultLocale 返回的值。  
 参数：  
@@ -80,7 +80,7 @@ public JFrame(String title) throws HeadlessException {
     }
 ```
 
-### 2.1.4 `public JFrame(String title, GraphicsConfiguration gc) `
+### 2.1.4 JFrame(String title, GraphicsConfiguration gc) 
 创建一个带有指定标题和屏幕设备指定 GraphicsConfiguration 的 JFrame。  
 此构造函数将组件的 locale 属性设置为 JComponent.getDefaultLocale 返回的值。  
 参数：  
@@ -95,7 +95,7 @@ public JFrame(String title, GraphicsConfiguration gc) {
     }
 ```
 
-## 2.2 `protected void frameInit()`
+## 2.2 frameInit()
 由构造函数调用，以正确初始化 JFrame。
 ```
 protected void frameInit() {
@@ -116,7 +116,7 @@ protected void frameInit() {
     }
 ```
 
-## 2.3 `protected JRootPane createRootPane()`
+## 2.3 createRootPane()
 由构造方法调用以创建默认的 rootPane。
 ```
 protected JRootPane createRootPane() {
@@ -128,7 +128,7 @@ protected JRootPane createRootPane() {
     }
 ```
 
-## 2.4 `protected void processWindowEvent(final WindowEvent e)`
+## 2.4 processWindowEvent(final WindowEvent e)
 处理发生在此组件上的窗口事件。根据 defaultCloseOperation 属性的设置，隐藏窗口或将其释放。  
 参数：  
 e – 窗口事件  
@@ -156,7 +156,7 @@ protected void processWindowEvent(final WindowEvent e) {
     }
 ```
 
-## 2.5 `public void setDefaultCloseOperation(int operation)`
+## 2.5 setDefaultCloseOperation(int operation)
 设置用户对该框架发起“关闭”操作时默认发生的操作。必须指定以下选项之一：  
 - DO_NOTHING_ON_CLOSE（在 WindowConstants 中定义）：不执行任何操作；需要程序在已注册的 WindowListener 对象的 windowClosing 方法中处理该操作。  
 - HIDE_ON_CLOSE（在 WindowConstants 中定义）：在调用任何已注册的 WindowListener 对象后自动隐藏框架。  
@@ -195,7 +195,7 @@ public void setDefaultCloseOperation(int operation) {
     }
 ```
 
-## 2.6 `public int getDefaultCloseOperation()`
+## 2.6 getDefaultCloseOperation()
 返回用户对该框架发起“关闭”操作时发生的操作。  
 返回：  
 一个整数，指示窗口关闭操作。
@@ -205,7 +205,7 @@ public int getDefaultCloseOperation() {
     }
 ```
 
-## 2.7 `public void setTransferHandler(TransferHandler newHandler)`  
+## 2.7 setTransferHandler(TransferHandler newHandler)
 设置 transferHandler 属性，这是一个支持将数据传输到此组件的机制。如果组件不支持数据传输操作，请使用 null。  
 如果系统属性 suppressSwingDropSupport 为 false（默认值），并且此组件上的当前拖放目标为空或不是用户设置的拖放目标，则此方法将按以下方式更改拖放目标：如果 newHandler 为 null，它将清除拖放目标。如果不为 null，它将安装一个新的 DropTarget。  
 注意：当与 JFrame 一起使用时，TransferHandler 仅提供数据导入功能，因为数据导出相关的方法目前类型化为 JComponent。  
@@ -221,7 +221,7 @@ public void setTransferHandler(TransferHandler newHandler) {
     }
 ```
 
-## 2.8  `public TransferHandler getTransferHandler()`
+## 2.8 TransferHandler getTransferHandler()
 获取 transferHandler 属性。  
 返回值：  
 transferHandler 属性的值。
@@ -231,7 +231,7 @@ public TransferHandler getTransferHandler() {
     }
 ```
 
-## 2.9  `public void update(Graphics g) `
+## 2.9  update(Graphics g) 
 仅调用 paint(g)。重写此方法是为了避免不必要的背景清除操作。  
 参数：  
 g – 用于绘制的 Graphics 上下文
@@ -241,7 +241,7 @@ public void update(Graphics g) {
     }
 ```
 
-## 2.10 `public void setJMenuBar(JMenuBar menubar)`
+## 2.10 setJMenuBar(JMenuBar menubar)
 设置此框架的菜单栏。  
 参数：  
 menubar – 放置在框架中的菜单栏
@@ -251,7 +251,7 @@ public void setJMenuBar(JMenuBar menubar) {
     }
 ```
 
-## 2.11 `public JMenuBar getJMenuBar() `
+## 2.11 getJMenuBar() 
 返回此框架上设置的菜单栏。  
 返回：  
 此框架的菜单栏  
@@ -261,7 +261,7 @@ public JMenuBar getJMenuBar() {
     }
 ```
 
-## 2.12 `protected boolean isRootPaneCheckingEnabled() `
+## 2.12 isRootPaneCheckingEnabled() 
 返回是否将对 add 和 setLayout 的调用转发到 contentPane。  
 返回：  
 如果 add 和 setLayout 被转发，则返回 true；否则返回 false。  
@@ -271,7 +271,7 @@ protected boolean isRootPaneCheckingEnabled() {
     }
 ```
 
-## 2.13 `protected void setRootPaneCheckingEnabled(boolean enabled) `
+## 2.13 setRootPaneCheckingEnabled(boolean enabled) 
 设置是否将对 add 和 setLayout 的调用转发到 contentPane。  
 参数：  
 enabled – 如果 add 和 setLayout 被转发，则为 true；如果它们应直接操作 JFrame，则为 false。
@@ -281,7 +281,7 @@ protected void setRootPaneCheckingEnabled(boolean enabled) {
     }
 ```
 
-## 2.14 `protected void addImpl(Component comp, Object constraints, int index)`
+## 2.14 addImpl(Component comp, Object constraints, int index)
 添加指定的子组件。此方法被重写以有条件地将调用转发到 contentPane。默认情况下，子组件被添加到 contentPane 而不是框架中，详细信息请参见 RootPaneContainer。  
 参数：  
 - comp – 要增强的组件
@@ -302,7 +302,7 @@ protected void addImpl(Component comp, Object constraints, int index)
     }
 ```
 
-## 2.15 `public void remove(Component comp) `
+## 2.15 remove(Component comp) 
 将指定的组件从容器中移除。如果 comp 不是 rootPane，则该方法将转发调用到 contentPane。如果 comp 不是 JFrame 或 contentPane 的子组件，则此操作将不起作用。  
 参数：  
 - comp：要移除的组件
@@ -319,7 +319,7 @@ public void remove(Component comp) {
     }
 ```
 
-## 2.16 `public void setLayout(LayoutManager manager) `
+## 2.16 setLayout(LayoutManager manager) 
 设置布局管理器。根据需要将调用条件性地转发到 contentPane。有关更多信息，请参阅 RootPaneContainer。  
 参数：
 - manager：要设置的布局管理器
@@ -335,7 +335,7 @@ public void setLayout(LayoutManager manager) {
 ```
 
 
-## 2.17 `public JRootPane getRootPane() `
+## 2.17 getRootPane() 
 返回此窗体的 rootPane 对象。  
 返回值：  
 rootPane 属性
@@ -345,7 +345,7 @@ public JRootPane getRootPane() {
     }
 ```
 
-## 2.18 `protected void setRootPane(JRootPane root)`
+## 2.18 setRootPane(JRootPane root)
 设置 rootPane 属性。此方法由构造函数调用。  
 参数：  
 root - 此窗体的 rootPane 对象    
@@ -369,7 +369,7 @@ protected void setRootPane(JRootPane root)
     }
 ```
 
-## 2.19 `public void setIconImage(Image image) `
+## 2.19 setIconImage(Image image) 
 设置要显示为窗口图标的图像。
 
 此方法可用于指定单个图像作为窗口的图标，而不是使用 setIconImages()。
@@ -393,7 +393,7 @@ public void setIconImage(Image image) {
     }
 ```
 
-## 2.20 `public Container getContentPane() `
+## 2.20 getContentPane() 
 返回此框架的 contentPane 对象。
 
 返回值：  
@@ -404,7 +404,7 @@ public Container getContentPane() {
     }
 ```
 
-## 2.21 `public void setContentPane(Container contentPane) `
+## 2.21 setContentPane(Container contentPane) 
 设置 contentPane 属性。此方法由构造函数调用。  
 Swing 的绘图架构需要在容纳层次结构中有一个不透明的 JComponent。通常由 content pane 提供此功能。如果你替换了 content pane，建议你用一个不透明的 JComponent 替换它。
 
@@ -419,7 +419,7 @@ public void setContentPane(Container contentPane) {
     }
 ```
 
-## 2.22 `public JLayeredPane getLayeredPane() `
+## 2.22 getLayeredPane() 
 返回此框架的 layeredPane 对象。
 
 返回值：
@@ -430,7 +430,7 @@ public JLayeredPane getLayeredPane() {
     }
 ```
 
-## 2.23 `public void setLayeredPane(JLayeredPane layeredPane) `
+## 2.23 setLayeredPane(JLayeredPane layeredPane) 
 设置layeredPane属性。此方法由构造函数调用。  
 参数：  
 layeredPane - 此框架的layeredPane对象  
@@ -442,7 +442,7 @@ public void setLayeredPane(JLayeredPane layeredPane) {
     }
 ```
 
-## 2.24 `public Component getGlassPane() `
+## 2.24 getGlassPane() 
 返回此框架的glassPane对象。  
 返回：  
 glassPane属性
@@ -452,7 +452,7 @@ public Component getGlassPane() {
     }
 ```
 
-## 2.25 `public void setGlassPane(Component glassPane) `
+## 2.25 setGlassPane(Component glassPane) 
 设置glassPane属性。此方法由构造函数调用。  
 参数：  
 glassPane – 此框架的glassPane对象
@@ -462,7 +462,7 @@ public void setGlassPane(Component glassPane) {
     }
 ```
 
-## 2.26 `public Graphics getGraphics() `
+## 2.26 getGraphics() 
 这个方法为指定的组件创建一个图形上下文。然而，如果该组件当前不可显示，这个方法将返回null。
 ```
 public Graphics getGraphics() {
@@ -471,7 +471,7 @@ public Graphics getGraphics() {
     }
 ```
 
-## 2.27 `public void repaint(long time, int x, int y, int width, int height) `
+## 2.27 repaint(long time, int x, int y, int width, int height) 
 这个方法在指定的时间（以毫秒为单位）内重绘此组件的指定矩形区域。详细信息请参考 RepaintManager。  
 参数：
 - time：更新前的最大时间（以毫秒为单位）
@@ -491,7 +491,7 @@ public void repaint(long time, int x, int y, int width, int height) {
     }
 ```
 
-## 2.28 `public static void setDefaultLookAndFeelDecorated(boolean defaultLookAndFeelDecorated) `
+## 2.28 setDefaultLookAndFeelDecorated(boolean defaultLookAndFeelDecorated) 
 这个方法提供了一个提示，指示新创建的 JFrame 是否应该由当前的外观（look and feel）提供其窗口装饰（如边框、关闭窗口的小部件、标题等）。如果 defaultLookAndFeelDecorated 是 true，当前的外观支持提供窗口装饰，并且当前窗口管理器支持无装饰窗口，那么新创建的 JFrame 将由当前外观提供窗口装饰。否则，新创建的 JFrame 将由当前窗口管理器提供窗口装饰。
 通过以下方法，您可以在单个 JFrame 上实现相同的效果：
 ```java
@@ -513,7 +513,7 @@ public static void setDefaultLookAndFeelDecorated(boolean defaultLookAndFeelDeco
     }
 ```
 
-## 2.29 `public static boolean isDefaultLookAndFeelDecorated() `
+## 2.29 isDefaultLookAndFeelDecorated() 
 这个方法返回一个布尔值，用来指示新创建的 JFrame 是否应该由当前的外观提供窗口装饰。这只是一个提示，因为某些外观可能不支持这个功能。
 ```
 public static boolean isDefaultLookAndFeelDecorated() {
@@ -526,7 +526,7 @@ public static boolean isDefaultLookAndFeelDecorated() {
     }
 ```
 
-## 2.30 `protected String paramString() `
+## 2.30 paramString() 
 这个方法返回 JFrame 的字符串表示形式。该方法仅用于调试目的，返回的字符串的内容和格式可能因实现而异。返回的字符串可能为空，但不会是 null。
 ```
 protected String paramString() {
@@ -557,7 +557,7 @@ protected String paramString() {
 ## 2.31 `protected AccessibleContext accessibleContext = null;`
 `accessibleContext` 属性。
 
-## 2.32 `public AccessibleContext getAccessibleContext() `
+## 2.32 getAccessibleContext() 
 与此 `JFrame` 关联的 `AccessibleContext`。对于 `JFrames`，`AccessibleContext` 以 `AccessibleJFrame` 的形式出现。如果有必要，将创建一个新的 `AccessibleJFrame` 实例。  
 返回：  
 一个作为此 `JFrame` 的 `AccessibleContext` 的 `AccessibleJFrame`。
