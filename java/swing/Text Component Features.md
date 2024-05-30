@@ -5,9 +5,8 @@ JTextComponent 类是 Swing 文本组件的基础。该类为其所有后代提�
 一个称为编辑器工具包的控制器，用于读取和写入文本，并实现具有动作的编辑功能。  
 支持无限撤销和重做。  
 可插拔的插入符号以及插入符号更改侦听器和导航过滤器的支持。  
-查看名为 TextComponentDemo 的示例以探索这些功能。尽管 TextComponentDemo 示例包含一个自定义的 JTextPane 实例，但本节讨论的功能被所有 JTextComponent 子类继承。  
-<a href="https://docs.oracle.com/javase/tutorial/uiswing/examples/components/TextComponentDemoProject/src/components/TextComponentDemo.java" onclick="window.open(this.href, '_blank'); return false;">TextComponentDemo</a>
-
+查看名为 TextComponentDemo 的示例以探索这些功能。尽管 TextComponentDemo 示例包含一个自定义的 JTextPane 实例，但本节讨论的功能被所有 JTextComponent 子类继承。 
+[TextComponentDemo]([链接URL](https://docs.oracle.com/javase/tutorial/uiswing/examples/components/TextComponentDemoProject/src/components/TextComponentDemo.java))
 
 ![image](https://github.com/guangying23/java/assets/54796147/8ec8181a-5fe6-41ea-92a5-f70fe9a422e6)
 
