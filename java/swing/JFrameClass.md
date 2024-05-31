@@ -619,26 +619,29 @@ protected class AccessibleJFrame extends AccessibleAWTFrame {
 
 | 序号 | 函数                                            | 简要介绍                                   |
 |------|-------------------------------------------------|------------------------------------------|
-| 1    | `public void setDefaultCloseOperation(int operation)` | 设置当用户发起关闭时窗口的默认操作。         |
-| 2    | `public int getDefaultCloseOperation()`            | 获取当前设置的默认关闭操作。                 |
-| 3    | `public void setTransferHandler(TransferHandler newHandler)` | 设置传输处理器，用于数据传输操作。         |
-| 4    | `public TransferHandler getTransferHandler()`      | 获取当前设置的传输处理器。                   |
-| 5    | `public void update(Graphics g)`                   | 更新组件的图形上下文，通常用于渲染界面。     |
-| 6    | `public void setJMenuBar(JMenuBar menubar)`       | 设置窗口的菜单栏。                          |
-| 7    | `public JMenuBar getJMenuBar()`                   | 获取当前窗口的菜单栏。                       |
-| 8    | `public void remove(Component comp)`              | 从窗口中移除一个组件。                      |
-| 9    | `public void setLayout(LayoutManager manager)`    | 设置窗口的布局管理器。                       |
-| 10   | `public JRootPane getRootPane()`                  | 获取窗口的根面板。                          |
-| 11   | `public void setIconImage(Image image)`           | 设置窗口的图标。                            |
-| 12   | `public Container getContentPane()`               | 获取窗口的内容面板。                        |
-| 13   | `public void setContentPane(Container contentPane)` | 设置窗口的内容面板。                       |
-| 14   | `public JLayeredPane getLayeredPane()`            | 获取窗口的分层面板。                        |
-| 15   | `public void setLayeredPane(JLayeredPane layeredPane)` | 设置窗口的分层面板。                      |
-| 16   | `public Component getGlassPane()`                | 获取窗口的玻璃面板（用于覆盖整个窗口的组件）。 |
-| 17   | `public void setGlassPane(Component glassPane)`  | 设置窗口的玻璃面板。                        |
-| 18   | `public Graphics getGraphics()`                  | 获取窗口的图形上下文。                      |
-| 19   | `public void repaint(long time, int x, int y, int width, int height)` | 重新绘制窗口的部分或全部区域。              |
-| 20   | `public AccessibleContext getAccessibleContext()` | 获取窗口的辅助功能上下文。                  |
-| 21   | `public String getAccessibleName()`              | 获取窗口的辅助功能名字。                    |
-| 22   | `public AccessibleStateSet getAccessibleStateSet()` | 获取窗口当前的辅助功能状态集。              |
+| 1    | `public JFrame(GraphicsConfiguration gc)`        | 使用指定的 `GraphicsConfiguration` 创建一个新窗口。 |
+| 2    | `public JFrame(String title, GraphicsConfiguration gc)` | 使用指定的标题和 `GraphicsConfiguration` 创建一个新窗口。 |
+| 3    | `public void setDefaultCloseOperation(int operation)` | 设置当用户发起关闭时窗口的默认操作。         |
+| 4    | `public int getDefaultCloseOperation()`            | 获取当前设置的默认关闭操作。                 |
+| 5    | `public void setTransferHandler(TransferHandler newHandler)` | 设置传输处理器，用于数据传输操作。         |
+| 6    | `public TransferHandler getTransferHandler()`      | 获取当前设置的传输处理器。                   |
+| 7    | `public void update(Graphics g)`                   | 更新组件的图形上下文，通常用于渲染界面。     |
+| 8    | `public void setJMenuBar(JMenuBar menubar)`       | 设置窗口的菜单栏。                          |
+| 9    | `public JMenuBar getJMenuBar()`                   | 获取当前窗口的菜单栏。                       |
+| 10   | `public void remove(Component comp)`              | 从窗口中移除一个组件。                      |
+| 11   | `public void setLayout(LayoutManager manager)`    | 设置窗口的布局管理器。                       |
+| 12   | `public JRootPane getRootPane()`                  | 获取窗口的根面板。                          |
+| 13   | `public void setIconImage(Image image)`           | 设置窗口的图标。                            |
+| 14   | `public Container getContentPane()`               | 获取窗口的内容面板。                        |
+| 15   | `public void setContentPane(Container contentPane)` | 设置窗口的内容面板。                       |
+| 16   | `public JLayeredPane getLayeredPane()`            | 获取窗口的分层面板。                        |
+| 17   | `public void setLayeredPane(JLayeredPane layeredPane)` | 设置窗口的分层面板。                      |
+| 18   | `public Component getGlassPane()`                | 获取窗口的玻璃面板（用于覆盖整个窗口的组件）。 |
+| 19   | `public void setGlassPane(Component glassPane)`  | 设置窗口的玻璃面板。                        |
+| 20   | `public Graphics getGraphics()`                  | 获取窗口的图形上下文。                      |
+| 21   | `public void repaint(long time, int x, int y, int width, int height)` | 重新绘制窗口的部分或全部区域。              |
+| 22   | `public AccessibleContext getAccessibleContext()` | 获取窗口的辅助功能上下文。                  |
+| 23   | `public String getAccessibleName()`              | 获取窗口的辅助功能名字。                    |
+| 24   | `public AccessibleStateSet getAccessibleStateSet()` | 获取窗口当前的辅助功能状态集。              |
+| 25   | `public static boolean isDefaultLookAndFeelDecorated()` | 判断新创建的 `JFrame` 是否应该使用当前的外观和感觉提供的窗口装饰。 |
 
