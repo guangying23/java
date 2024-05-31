@@ -645,3 +645,16 @@ protected class AccessibleJFrame extends AccessibleAWTFrame {
 | 24   | `public AccessibleStateSet getAccessibleStateSet()` | 获取窗口当前的辅助功能状态集。              |
 | 25   | `public static boolean isDefaultLookAndFeelDecorated()` | 判断新创建的 `JFrame` 是否应该使用当前的外观和感觉提供的窗口装饰。 |
 
+
+以下是 `JFrame` 类中所有 protected 方法的表格
+
+| 序号 | 方法签名                                                         | 功能                                                                                   |
+|-----|------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| 1   | `protected void frameInit()`                                     | 初始化 `JFrame`，设置一些默认操作，比如键盘监听、窗口监听、本地化设置等。                  |
+| 2   | `protected JRootPane createRootPane()`                           | 创建并返回一个 `JRootPane` 对象。`JRootPane` 是用于管理内容面板、菜单栏和可选的窗口装饰的组件。 |
+| 3   | `protected void processWindowEvent(WindowEvent e)`               | 处理窗口事件，如关闭窗口时根据 `defaultCloseOperation` 属性来决定隐藏窗口、销毁窗口还是退出应用等。 |
+| 4   | `protected void setRootPane(JRootPane root)`                     | 设置 `JFrame` 的 `JRootPane`。如果之前有 `rootPane`，将其从 `JFrame` 中移除，并添加新的 `rootPane`。  |
+| 5   | `protected boolean isRootPaneCheckingEnabled()`                  | 检查是否启用了对添加到 `JFrame` 的组件的根面板检查。                                             |
+| 6   | `protected void setRootPaneCheckingEnabled(boolean enabled)`     | 设置是否启用根面板检查。启用后，对于添加到 `JFrame` 的组件，会自动将它们重定向到内容面板。         |
+| 7   | `protected void addImpl(Component comp, Object constraints, int index)` | 将指定组件添加到 `JFrame`，根据 `rootPaneCheckingEnabled` 状态决定是否将组件添加到内容面板或直接添加到 `JFrame`。 |
+
