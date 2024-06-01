@@ -37,7 +37,7 @@ pane.setBorder(BorderFactory.createLineBorder(Color.black));
 <img src="https://github.com/guangying23/java/assets/54796147/85dab06d-c63e-4484-829d-e91723e70f65" alt="示例图片" width="360" height="200">
 
 ## Using the Borders Provided by Swing
-接下来的代码展示了如何创建和设置你在前面几幅图中看到的边框。你可以在 [`BorderDemo.java` ](java/swing/source/BorderDemo.java)文件中找到程序的代码。
+接下来的代码展示了如何创建和设置你在前面几幅图中看到的边框。你可以在 [`BorderDemo.java` ](https://github.com/guangying23/java/blob/8fe8d444c492f7bce9b1ef39f4d51a933e806513/java/swing/source/BorderDemo.java)文件中找到程序的代码。
 
 ```java
 // 保留对接下来几个边框的引用，
@@ -121,3 +121,39 @@ jComp15.setBorder(compound);
 正如你可能已经注意到的，代码使用了 `BorderFactory` 类来创建每个边框。`BorderFactory` 类位于 `javax.swing` 包中，它返回实现 `Border` 接口的对象。
 
 `Border` 接口及其 Swing 提供的实现都位于 `javax.swing.border` 包中。通常，你不需要直接使用 `border` 包中的任何内容，除非在指定特定边框类的常量或引用 `Border` 类型时。这样的设计使得 Swing 的边框系统既灵活又易于使用，允许开发者快速地为 UI 组件添加视觉边界。
+
+## Creating Custom Borders
+如果 `BorderFactory` 没有提供足够的控制来定制边框的形式，那么你可能需要直接使用 `border` 包中的 API，甚至定义自己的边框。除了包含 `Border` 接口外，`border` 包还包含了实现你已经看到的边框的类：`LineBorder`、`EtchedBorder`、`BevelBorder`、`EmptyBorder`、`MatteBorder`、`TitledBorder` 和 `CompoundBorder`。`border` 包还包含一个名为 `SoftBevelBorder` 的类，其效果类似于 `BevelBorder`，但边缘更柔和。
+
+如果 Swing 提供的边框不适合你的需求，你可以实现自己的边框。通常，你可以通过创建 `AbstractBorder` 类的子类来实现这一点。在你的子类中，你必须实现至少一个构造函数和以下两个方法：
+
+- `paintBorder`，包含 `JComponent` 执行以绘制边框的绘图代码。
+- `getBorderInsets`，指定边框绘制自身所需的空间。
+
+如果自定义边框有内边距（它们通常有内边距），你需要重写 `AbstractBorder.getBorderInsets(Component c)` 和 `AbstractBorder.getBorderInsets(Component c, Insets insets)` 来提供正确的内边距。
+
+要查看实现边框的示例，请参阅 `javax.swing.border` 包中类的源代码。这些示例将为你提供如何自定义和扩展边框功能的实际指导。       
+
+## The Border API
+下面的表格列出了常用的边框方法。使用边框的 API 分为两类：
+- 使用 BorderFactory 创建边框
+- 设置或获取组件的边框
+
+| Method | Purpose |
+| --- | --- |
+| **Border createLineBorder(Color)** <br> **Border createLineBorder(Color, int)** | 创建线条边框。第一个参数是一个 java.awt.Color 对象，指定线条的颜色。可选的第二个参数指定线条的像素宽度。 |
+| **Border createEtchedBorder()** <br> **Border createEtchedBorder(Color, Color)** <br> **Border createEtchedBorder(int)** <br> **Border createEtchedBorder(int, Color, Color)** | 创建蚀刻边框。可选的 Color 参数指定使用的高光和阴影颜色。带有 int 参数的方法允许边框的方式被指定为 EtchedBorder.RAISED 或 EtchedBorder.LOWERED。不带 int 参数的方法创建一个下降的蚀刻边框。 |
+| **Border createLoweredBevelBorder()** | 创建一个使组件看起来低于周围区域的边框。 |
+| **Border createRaisedBevelBorder()** | 创建一个使组件看起来高于周围区域的边框。 |
+| **Border createBevelBorder(int, Color, Color)** <br> **Border createBevelBorder(int, Color, Color, Color, Color)** | 创建一个凸起或下陷的斜面边框，指定使用的颜色。整数参数可以是 BevelBorder.RAISED 或 BevelBorder.LOWERED。三参数构造函数指定高光和阴影颜色。五参数构造函数依次指定外高光、内高光、外阴影和内阴影颜色。 |
+| **Border createEmptyBorder()** <br> **Border createEmptyBorder(int, int, int, int)** | 创建一个不可见的边框。如果没有指定参数，则边框不占用空间，这在创建没有可见边界的标题边框时很有用。可选参数指定边框在使用它的组件的顶部、左侧、底部和右侧（按此顺序）占用的像素数。此方法用于在组件周围放置空白空间。 |
+| **MatteBorder createMatteBorder(int, int, int, int, Color)** <br> **MatteBorder createMatteBorder(int, int, int, int, Icon)** | 创建一个哑光边框。整数参数指定边框在使用它的组件的顶部、左侧、底部和右侧（按此顺序）占用的像素数。颜色参数指定边框应填充其区域的颜色。图标参数指定边框应该平铺其区域的图标。 |
+| **TitledBorder createTitledBorder(String)** <br> **TitledBorder createTitledBorder(Border)** <br> **TitledBorder createTitledBorder(Border, String)** <br> **TitledBorder createTitledBorder(Border, String, int, int)** <br> **TitledBorder createTitledBorder(Border, String, int, int, Font)** <br> **TitledBorder createTitledBorder(Border, String, int, int, Font, Color)** | 创建一个带标题的边框。字符串参数指定要显示的标题。可选的字体和颜色参数指定标题文本的字体和颜色。边框参数指定应该显示的边框。如果没有指定边框，则使用外观和感觉特定的默认边框。默认情况下，标题横跨其伴随边框的顶部并左对齐。可选的整数参数依次指定标题的位置和对齐方式。TitledBorder 定义了以下可能的位置：ABOVE_TOP, TOP（默认）, BELOW_TOP, ABOVE_BOTTOM, BOTTOM, 和 BELOW_BOTTOM。你可以将对齐方式指定为 LEADING（默认），CENTER，或 TRAILING。在使用西方字母表的地区，LEADING 等同于 LEFT 且 TRAILING 等同于 RIGHT。 |
+| CompoundBorder createCompoundBorder(Border, Border)|将两个边框组合成一个。第一个参数指定外边框；第二个参数指定内边框。|
+
+| 方法 | 目的 |
+| --- | --- |
+| void setBorder(Border) | 设置或获取接收 JComponent 的边框。 |
+| Border getBorder() | 获取接收 JComponent 的边框。 |
+| void setBorderPainted(boolean) | 设置或获取组件的边框是否应显示（适用于 AbstractButton, JMenuBar, JPopupMenu, JProgressBar, 和 JToolBar）。 |
+| boolean isBorderPainted() | 获取组件的边框是否应显示（适用于 AbstractButton, JMenuBar, JPopupMenu, JProgressBar, 和 JToolBar）。 |
