@@ -1,10 +1,3 @@
-package com.component.ColorChooserDemoProject;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.colorchooser.*;
-
 public class ColorChooserDemo extends JPanel
                               implements ChangeListener {
 
