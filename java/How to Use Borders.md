@@ -37,7 +37,7 @@ pane.setBorder(BorderFactory.createLineBorder(Color.black));
 <img src="https://github.com/guangying23/java/assets/54796147/85dab06d-c63e-4484-829d-e91723e70f65" alt="示例图片" width="360" height="200">
 
 ## Using the Borders Provided by Swing
-接下来的代码展示了如何创建和设置你在前面几幅图中看到的边框。你可以在 `BorderDemo.java` 文件中找到程序的代码。
+接下来的代码展示了如何创建和设置你在前面几幅图中看到的边框。你可以在 [`BorderDemo.java` ](java/swing/source/BorderDemo.java)文件中找到程序的代码。
 
 ```java
 // 保留对接下来几个边框的引用，
