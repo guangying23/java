@@ -1,11 +1,3 @@
-package com.component.ColorChooserDemo2Project;
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.colorchooser.*;
 /* Used by ColorChooserDemo2.java. */public class CrayonPanel extends AbstractColorChooserPanel
                          implements ActionListener {
     JToggleButton redCrayon;
