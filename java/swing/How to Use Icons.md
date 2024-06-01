@@ -105,7 +105,7 @@ private class ThumbnailAction extends AbstractAction {
 这个 `ThumbnailAction` 类通过在按钮上设置缩略图和全尺寸图像，以及响应按钮点击事件来显示全尺寸图像，展示了如何有效地使用 `AbstractAction` 来处理事件和更新 UI。
 
 ## Loading Images Using getResource
-通常情况下，图像图标的数据来源于一个图像文件。你的应用程序的类文件和图像文件在文件服务器上可能有多种有效的配置方式。你可能将类文件放在一个 JAR 文件中，或者将图像文件放在一个 JAR 文件中；它们可能在同一个 JAR 文件中，也可能在不同的 JAR 文件中。以下几种方式展示了这些文件可以如何配置：
+通常情况下，图像图标的数据来源于一个图像文件。你的应用程序的类文件和图像文件在文件服务器上可能有多种有效的配置方式。你可能将类文件放在一个 JAR 文件中，或者将图像文件放在一个 JAR 文件中；它们可能在同一个 JAR 文件中，也可能在不同的 JAR 文件中。以下几种方式展示了这些文件可以如何配置：  
 ![image](https://github.com/guangying23/java/assets/54796147/1e5ec0c0-96d8-439d-80ce-ea30522c87bd)
 ![image](https://github.com/guangying23/java/assets/54796147/df71c672-6a2f-4147-80ad-68e5842162d6)  
 类文件位于一个包含 PNG 格式图像文件的图像目录旁边。      类文件与 JAR 文件位于同一目录中。JAR 文件是通过将所有图像文件放在一个名为 images 的目录中创建的。
