@@ -1,10 +1,9 @@
-/* Used by ColorChooserDemo2.java. */public class CrayonPanel extends AbstractColorChooserPanel
+public class CrayonPanel extends AbstractColorChooserPanel
                          implements ActionListener {
     JToggleButton redCrayon;
     JToggleButton yellowCrayon;
     JToggleButton greenCrayon;
     JToggleButton blueCrayon;
-
     public void updateChooser() {
         Color color = getColorFromModel();
         if (Color.red.equals(color)) {
