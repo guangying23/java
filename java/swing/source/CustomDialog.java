@@ -1,12 +1,3 @@
-package com.component.DialogDemoProject;
-
-import javax.swing.JOptionPane;
-import javax.swing.JDialog;
-import javax.swing.JTextField;
-import java.beans.*; //property change stuff
-import java.awt.*;
-import java.awt.event.*;
-
 class CustomDialog extends JDialog
                    implements ActionListener,
                               PropertyChangeListener {
